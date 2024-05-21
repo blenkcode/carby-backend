@@ -5,11 +5,10 @@ require('../models/connection');
 
 const NEWS_API_KEY = process.env.NEWS_API_KEY;
 router.get('/articles', (req, res) => {
-    fetch(`https://newsapi.org/v2/everything?q=environment&apiKey=${NEWS_API_KEY}`)
+    fetch(`https://newsapi.org/v2/everything?q=écologie OR écoresponsabilité OR recyclage OR "développement durable" OR "zéro déchet" OR "énergie renouvelable"&language=fr&apiKey=${NEWS_API_KEY}`)
       .then(response => response.json())
       .then(data => {
-        console.log(data); // Log the complete response
-        if (data.articles) { // Check for the actual data property
+        if (data.articles) { 
           res.json({ articles: data.articles });
         } else {
           res.json({ articles: [] });
