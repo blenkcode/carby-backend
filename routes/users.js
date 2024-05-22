@@ -26,11 +26,13 @@ router.post('/signup', (req, res) => {
         email: req.body.email,
         username: req.body.username,
         password: hash,
+        xp: 0,
+        level: 1,
         token: uid2(32),
       });
 
       newUser.save().then(newDoc => {
-        res.json({ result: true, token: newDoc.token });
+        res.json({ result: true, token: newDoc.token, username: newDoc.username, xp: newDoc.xp, level: newDoc.level, userId: newDoc._id });
       });
     } else {
       // User already exists in database
@@ -40,6 +42,7 @@ router.post('/signup', (req, res) => {
 });
 
 router.post('/signin', (req, res) => {
+  console.log(req)
   if (!checkBody(req.body, ['email', 'password'])) {
     res.json({ result: false, error: 'Missing or empty fields' });
     return;
