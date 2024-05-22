@@ -32,7 +32,7 @@ router.post('/signup', (req, res) => {
       });
 
       newUser.save().then(newDoc => {
-        res.json({ result: true, token: newDoc.token, username: newDoc.username, xp: newDoc.xp, level: newDoc.level, userId: newDoc._id });
+        res.json({ result: true, token: newDoc.token, username: newDoc.username, xp: newDoc.xp, level: newDoc.level, _id: newDoc._id });
       });
     } else {
       // User already exists in database
@@ -42,7 +42,6 @@ router.post('/signup', (req, res) => {
 });
 
 router.post('/signin', (req, res) => {
-  console.log(req)
   if (!checkBody(req.body, ['email', 'password'])) {
     res.json({ result: false, error: 'Missing or empty fields' });
     return;
@@ -57,5 +56,29 @@ router.post('/signin', (req, res) => {
   });
 });
 
+router.put('/:userId/tasks', (req, res) => {
+  const userId = req.params.userId;
+  console.log('Received userId:', userId);
+  console.log('Received body:', req.body);
+
+  if (!checkBody(req.body, ['tasks'])) {
+    res.status(400).json({ result: false, error: 'Missing or empty fields' });
+    return;
+  }
+
+  User.findByIdAndUpdate(userId, { tasks: req.body.tasks }, { new: true })
+    .then((updatedUser) => {
+      if (updatedUser) {
+        console.log('Tasks updated:', updatedUser.tasks);
+        res.json({ result: true, tasks: updatedUser.tasks });
+      } else {
+        res.status(404).json({ result: false, error: 'User not found' });
+      }
+    })
+    .catch((error) => {
+      console.error('Error updating user:', error);
+      res.status(500).json({ result: false, error: error.message });
+    });
+});
 
 module.exports = router;
