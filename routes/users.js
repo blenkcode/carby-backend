@@ -92,7 +92,6 @@ router.get("/:userId/tasks", (req, res) => {
   User.findById(userId)
     .populate("tasks")
     .then((user) => {
-      s;
       res.json({
         result: true,
         tasks: user.tasks,
