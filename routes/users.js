@@ -85,4 +85,22 @@ router.put("/:userId/tasks", (req, res) => {
     });
 });
 
+// Route GET pour récupérer les tâches d'un utilisateur
+router.get("/:userId/tasks", (req, res) => {
+  const userId = req.params.userId;
+
+  User.findById(userId)
+    .populate("tasks") // Utilisation de populate pour obtenir les détails des tâches
+    .then((user) => {
+      res.json({
+        result: true,
+        tasks: user.tasks,
+      });
+    })
+    .catch((error) => {
+      console.error("Error fetching tasks:", error);
+      res.status(500).json({ result: false, error: error.message });
+    });
+});
+
 module.exports = router;
