@@ -1,14 +1,11 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const taskSchema = mongoose.Schema({
-    name: String,
-    description : String,
-    xp : Number,
-    image: String,
-    recurence: String,
-    categorie : String,
-    });
+  title: String,
+  description: String,
+  img: String,
+});
 
-const Task = mongoose.model('tasks', taskSchema);
+const Task = mongoose.model("task", taskSchema);
 
 module.exports = Task;
