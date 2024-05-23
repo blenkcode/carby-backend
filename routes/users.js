@@ -66,7 +66,7 @@ router.post("/signin", (req, res) => {
     }
   );
 });
-
+//route PUT pour mettre à jour les tasks d'un utilisateur par son ID
 router.put("/:userId/tasks", (req, res) => {
   const userId = req.params.userId;
 
@@ -88,10 +88,11 @@ router.put("/:userId/tasks", (req, res) => {
 // Route GET pour récupérer les tâches d'un utilisateur
 router.get("/:userId/tasks", (req, res) => {
   const userId = req.params.userId;
-
+  // Utilisation de populate pour obtenir les documents liés à la clef étrangère.
   User.findById(userId)
-    .populate("tasks") // Utilisation de populate pour obtenir les détails des tâches
+    .populate("tasks")
     .then((user) => {
+      s;
       res.json({
         result: true,
         tasks: user.tasks,
