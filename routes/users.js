@@ -67,24 +67,22 @@ router.post("/signin", (req, res) => {
   );
 });
 
-router.put("/users/:userId/tasks", async (req, res) => {
+router.put("/:userId/tasks", (req, res) => {
   const userId = req.params.userId;
-  const { tasks } = req.body;
 
-  try {
-    // Trouver l'utilisateur par ID et mettre à jour ses tâches
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ result: false, error: "User not found" });
-    }
-
-    user.tasks = tasks; // Mettre à jour les tâches de l'utilisateur
-    await user.save();
-
-    res.json({ result: true, tasks: user.tasks });
-  } catch (error) {
-    res.status(500).json({ result: false, error: error.message });
-  }
+  User.findByIdAndUpdate(userId, { tasks: req.body.tasks }, { new: true })
+    .then((updatedUser) => {
+      if (updatedUser) {
+        console.log("Tasks updated:", updatedUser.tasks);
+        res.json({ result: true, tasks: updatedUser.tasks });
+      } else {
+        res.status(404).json({ result: false, error: "User not found" });
+      }
+    })
+    .catch((error) => {
+      console.error("Error updating user:", error);
+      res.status(500).json({ result: false, error: error.message });
+    });
 });
 
 module.exports = router;
