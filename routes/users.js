@@ -70,7 +70,7 @@ router.post("/signin", (req, res) => {
 router.put("/:userId/tasks", (req, res) => {
   const userId = req.params.userId;
 
-  User.findByIdAndUpdate(userId, { tasks: req.body.tasks }, { new: true })
+  User.findByIdAndUpdate(userId, n, { new: true })
     .then((updatedUser) => {
       if (updatedUser) {
         console.log("Tasks updated:", updatedUser.tasks);
@@ -90,8 +90,9 @@ router.get("/:userId/tasks", (req, res) => {
   const userId = req.params.userId;
   // Utilisation de populate pour obtenir les documents liés à la clef étrangère.
   User.findById(userId)
-    .populate("tasks")
+    .populate("tasks.taskid")
     .then((user) => {
+      console.log(user);
       res.json({
         result: true,
         tasks: user.tasks,
