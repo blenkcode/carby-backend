@@ -69,7 +69,7 @@ router.post("/signin", (req, res) => {
 //route PUT pour mettre à jour les tasks d'un utilisateur par son ID /// maj ajouter et supprimer taches
 router.put("/:userId/tasks", (req, res) => {
   const userId = req.params.userId;
-  const { tasksIdArray } = req.body.tasks;
+  const tasksIdArray = req.body.tasksIdArray;
   const tasksArray = tasksIdArray[0]
     .split(",")
     .map((id) => mongoose.Types.ObjectId(id));
