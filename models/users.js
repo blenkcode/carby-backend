@@ -1,28 +1,19 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const userSchema = mongoose.Schema({
   username: String,
   email: String,
   password: String,
   token: String,
-  avatar:String,
-  xp : Number,
+  avatar: String,
+  xp: Number,
   level: Number,
-  friendlist:[],
+  friendlist: [],
+  badges: { type: mongoose.Schema.Types.ObjectId, ref: "badges" },
 
-    badges : [{
-    badgesid :{ type: mongoose.Schema.Types.ObjectId, ref: 'badges'}, 
-    progression : Number,
-    isDone : Boolean}],
-        
-    tasks :
-    [{ taskid: { type: mongoose.Schema.Types.ObjectId, ref: 'tasks' },
-    progression: {
-    isDone : Boolean,
-    date : String}
-    }],
-    });
+  tasks: { type: mongoose.Schema.Types.ObjectId, ref: "tasks" },
+});
 
-const User = mongoose.model('users', userSchema);
+const User = mongoose.model("users", userSchema);
 
 module.exports = User;

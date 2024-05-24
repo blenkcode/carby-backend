@@ -90,7 +90,7 @@ router.get("/:userId/tasks", (req, res) => {
   const userId = req.params.userId;
   // Utilisation de populate pour obtenir les documents liés à la clef étrangère.
   User.findById(userId)
-    .populate("tasks.taskid")
+    .populate("tasks")
     .then((user) => {
       console.log(user);
       res.json({
