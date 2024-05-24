@@ -112,4 +112,27 @@ router.get("/tasks/:token", (req, res) => {
     });
 });
 
+router.put("/lvl/:token", (req, res) => {
+  const token = req.params.token;
+  const lvlAdd = req.body.lvl;
+  User.updateOne({ token }, { lvl: lvlAdd })
+    .then((result) => {
+      if (result.nModified === 0) {
+        //nModified,  updateOne ne retourne pas directement le document mis à jour mais un objet contenant des informations sur l'opération (n, nModified par ex)
+        return res.status(404).json({
+          result: false,
+          error: "User not found or level not changed",
+        });
+      }
+      res.json({
+        result: true,
+        lvl: lvlAdd,
+      });
+    })
+    .catch((error) => {
+      console.error("Error updating level:", error);
+      res.status(500).json({ result: false, error: error.message });
+    });
+});
+
 module.exports = router;
