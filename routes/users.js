@@ -70,7 +70,7 @@ router.post("/signin", (req, res) => {
 router.put("/:userId/tasks", (req, res) => {
   const userId = req.params.userId;
 
-  User.findByIdAndUpdate(userId, n, { new: true })
+  User.findByIdAndUpdate(userId, { new: true })
     .then((updatedUser) => {
       if (updatedUser) {
         console.log("Tasks updated:", updatedUser.tasks);

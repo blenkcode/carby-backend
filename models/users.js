@@ -9,9 +9,9 @@ const userSchema = mongoose.Schema({
   xp: Number,
   level: Number,
   friendlist: [],
-  badges: { type: mongoose.Schema.Types.ObjectId, ref: "badges" },
+  badges: [{ type: mongoose.Schema.Types.ObjectId, ref: "badges" }],
 
-  tasks: { type: mongoose.Schema.Types.ObjectId, ref: "tasks" },
+  tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: "tasks" }],
 });
 
 const User = mongoose.model("users", userSchema);
