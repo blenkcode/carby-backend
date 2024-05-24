@@ -69,25 +69,20 @@ router.post("/signin", (req, res) => {
 //route PUT pour mettre à jour les tasks d'un utilisateur par son ID /// maj ajouter et supprimer taches
 router.put("/:userId/tasks", (req, res) => {
   const userId = req.params.userId;
-  const { tasksIdArray } = req.body;
+  const { tasksIdArray } = req.body.tasks;
+  const tasksArray = tasksIdArray[0]
+    .split(",")
+    .map((id) => mongoose.Types.ObjectId(id));
+  console.log("taskArray :::", tasksArray);
 
-  if (!Array.isArray(tasksIdArray) || tasksIdArray.length !== 1) {
+  if (!Array.isArray(tasksArray) || tasksArray.length !== 1) {
     return res
       .status(400)
       .json({ result: false, error: "Invalid tasksId format" });
   }
 
-  // Split the single string into an array of IDs
-  const tasksArray = tasksIdArray[0]
-    .split(",")
-    .map((id) => mongoose.Types.ObjectId(id));
+  User.findByIdAndUpdate(userId, { tasks: tasksArray }, { new: true })
 
-  User.findByIdAndUpdate(
-    userId,
-    { tasks: tasksArray },
-    { new: true } // Return the updated document
-  )
-    .populate("tasks.taskid") // Optionally, populate the tasks to return full task details
     .then((updatedUser) => {
       if (!updatedUser) {
         return res.status(404).json({ result: false, error: "User not found" });
