@@ -70,18 +70,8 @@ router.post("/signin", (req, res) => {
 router.put("/:userId/tasks", (req, res) => {
   const userId = req.params.userId;
   const tasksIdArray = req.body.tasksIdArray;
-  const tasksArray = tasksIdArray[0]
-    .split(",")
-    .map((id) => mongoose.Types.ObjectId(id));
 
-  // Validate the tasksArray length
-  if (!Array.isArray(tasksArray) || tasksArray.length === 0) {
-    return res
-      .status(400)
-      .json({ result: false, error: "Invalid tasksId format" });
-  }
-
-  User.findByIdAndUpdate(userId, { tasks: tasksArray }, { new: true })
+  User.findByIdAndUpdate(userId, { tasks: tasksIdArray }, { new: true })
     .populate("tasks") // Populate the tasks to return full task details
     .then((updatedUser) => {
       if (!updatedUser) {
