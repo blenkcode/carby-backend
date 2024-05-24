@@ -67,20 +67,24 @@ router.post("/signin", (req, res) => {
   );
 });
 //route PUT pour mettre à jour les tasks d'un utilisateur par son ID /// maj ajouter et supprimer taches
-router.put("/:userId/tasks", (req, res) => {
-  const userId = req.params.userId;
+router.put("/initTasks/:token", (req, res) => {
+  const token = req.params.token;
   const tasksId = req.body.tasksId;
-
-  User.findByIdAndUpdate(userId, { tasks: tasksId }, { new: true })
-    .populate("tasks")
-    .then((updatedUser) => {
-      if (!updatedUser) {
-        return res.status(404).json({ result: false, error: "User not found" });
-      }
-      res.json({
-        result: true,
-        tasks: updatedUser.tasks,
-      });
+  User.findOne({ token })
+    .then((user) => {
+      User.findByIdAndUpdate(user._id, { tasks: tasksId }, { new: true })
+        .populate("tasks")
+        .then((updatedUser) => {
+          if (!updatedUser) {
+            return res
+              .status(404)
+              .json({ result: false, error: "User not found" });
+          }
+          res.json({
+            result: true,
+            tasks: updatedUser.tasks,
+          });
+        });
     })
     .catch((error) => {
       console.error("Error updating tasks:", error);
@@ -88,10 +92,10 @@ router.put("/:userId/tasks", (req, res) => {
     });
 });
 
-router.get("/:userId/tasks", (req, res) => {
-  const userId = req.params.userId;
+router.get("/tasks/:token", (req, res) => {
+  const token = req.params.token;
 
-  User.findById(userId)
+  User.findOne({ token })
     .populate("tasks")
     .then((user) => {
       if (!user) {
