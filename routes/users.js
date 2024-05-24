@@ -73,16 +73,16 @@ router.put("/:userId/tasks", (req, res) => {
   const tasksArray = tasksIdArray[0]
     .split(",")
     .map((id) => mongoose.Types.ObjectId(id));
-  console.log("taskArray :::", tasksArray);
 
-  if (!Array.isArray(tasksArray) || tasksArray.length !== 1) {
+  // Validate the tasksArray length
+  if (!Array.isArray(tasksArray) || tasksArray.length === 0) {
     return res
       .status(400)
       .json({ result: false, error: "Invalid tasksId format" });
   }
 
   User.findByIdAndUpdate(userId, { tasks: tasksArray }, { new: true })
-
+    .populate("tasks") // Populate the tasks to return full task details
     .then((updatedUser) => {
       if (!updatedUser) {
         return res.status(404).json({ result: false, error: "User not found" });
@@ -98,13 +98,16 @@ router.put("/:userId/tasks", (req, res) => {
     });
 });
 
-// Route GET pour récupérer les tâches d'un utilisateur
+// Route GET to fetch tasks for a user
 router.get("/:userId/tasks", (req, res) => {
   const userId = req.params.userId;
-  // Utilisation de populate pour obtenir les documents liés à la clef étrangère.
+
   User.findById(userId)
     .populate("tasks")
     .then((user) => {
+      if (!user) {
+        return res.status(404).json({ result: false, error: "User not found" });
+      }
       res.json({
         result: true,
         tasks: user.tasks,
