@@ -78,7 +78,9 @@ router.put("/:userId/tasks", (req, res) => {
   }
 
   // Split the single string into an array of IDs
-  const tasksArray = tasksIdArray[0].split(",").map((id) => ({ taskid: id }));
+  const tasksArray = tasksIdArray[0]
+    .split(",")
+    .map((id) => mongoose.Types.ObjectId(id));
 
   User.findByIdAndUpdate(
     userId,
