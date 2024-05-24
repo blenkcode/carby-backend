@@ -11,7 +11,7 @@ const userSchema = mongoose.Schema({
   friendlist: [],
   badges: [{ type: mongoose.Schema.Types.ObjectId, ref: "badges" }],
 
-  tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: "tasks" }],
+  tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: "task" }],
 });
 
 const User = mongoose.model("users", userSchema);
