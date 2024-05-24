@@ -69,10 +69,10 @@ router.post("/signin", (req, res) => {
 //route PUT pour mettre à jour les tasks d'un utilisateur par son ID /// maj ajouter et supprimer taches
 router.put("/:userId/tasks", (req, res) => {
   const userId = req.params.userId;
-  const tasksIdArray = req.body.tasksIdArray;
+  const tasksId = req.body.tasksId;
 
-  User.findByIdAndUpdate(userId, { tasks: tasksIdArray }, { new: true })
-    .populate("tasks") // Populate the tasks to return full task details
+  User.findByIdAndUpdate(userId, { tasks: tasksId }, { new: true })
+    .populate("tasks")
     .then((updatedUser) => {
       if (!updatedUser) {
         return res.status(404).json({ result: false, error: "User not found" });
@@ -88,7 +88,6 @@ router.put("/:userId/tasks", (req, res) => {
     });
 });
 
-// Route GET to fetch tasks for a user
 router.get("/:userId/tasks", (req, res) => {
   const userId = req.params.userId;
 
