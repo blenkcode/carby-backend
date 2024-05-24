@@ -66,21 +66,37 @@ router.post("/signin", (req, res) => {
     }
   );
 });
-//route PUT pour mettre à jour les tasks d'un utilisateur par son ID
+//route PUT pour mettre à jour les tasks d'un utilisateur par son ID /// maj ajouter et supprimer taches
 router.put("/:userId/tasks", (req, res) => {
   const userId = req.params.userId;
+  const { tasksIdArray } = req.body;
 
-  User.findByIdAndUpdate(userId, { new: true })
+  if (!Array.isArray(tasksIdArray) || tasksIdArray.length !== 1) {
+    return res
+      .status(400)
+      .json({ result: false, error: "Invalid tasksId format" });
+  }
+
+  // Split the single string into an array of IDs
+  const tasksArray = tasksIdArray[0].split(",").map((id) => ({ taskid: id }));
+
+  User.findByIdAndUpdate(
+    userId,
+    { tasks: tasksArray },
+    { new: true } // Return the updated document
+  )
+    .populate("tasks.taskid") // Optionally, populate the tasks to return full task details
     .then((updatedUser) => {
-      if (updatedUser) {
-        console.log("Tasks updated:", updatedUser.tasks);
-        res.json({ result: true, tasks: updatedUser.tasks });
-      } else {
-        res.status(404).json({ result: false, error: "User not found" });
+      if (!updatedUser) {
+        return res.status(404).json({ result: false, error: "User not found" });
       }
+      res.json({
+        result: true,
+        tasks: updatedUser.tasks,
+      });
     })
     .catch((error) => {
-      console.error("Error updating user:", error);
+      console.error("Error updating tasks:", error);
       res.status(500).json({ result: false, error: error.message });
     });
 });
@@ -92,7 +108,6 @@ router.get("/:userId/tasks", (req, res) => {
   User.findById(userId)
     .populate("tasks")
     .then((user) => {
-      console.log(user);
       res.json({
         result: true,
         tasks: user.tasks,
