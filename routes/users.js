@@ -118,7 +118,7 @@ router.put("/lvl/:token", (req, res) => {
 
   User.findOne({ token })
     .then((user) => {
-      User.findByIdAndUpdate(user._id, { lvl: lvlAdd }, { new: true }).then(
+      User.findByIdAndUpdate(user._id, { level: lvlAdd }, { new: true }).then(
         (updatedUser) => {
           if (!updatedUser) {
             return res
