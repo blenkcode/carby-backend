@@ -127,7 +127,7 @@ router.put("/lvl/:token", (req, res) => {
           }
           res.json({
             result: true,
-            lvl: updatedUser.lvl,
+            lvl: updatedUser.level,
           });
         }
       );
