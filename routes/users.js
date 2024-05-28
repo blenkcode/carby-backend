@@ -69,10 +69,10 @@ router.post("/signin", (req, res) => {
 //route PUT pour mettre à jour les tasks d'un utilisateur par son ID /// maj ajouter et supprimer taches
 router.put("/initTasks/:token", (req, res) => {
   const token = req.params.token;
-  const tasksId = req.body.tasksId;
+  const tasksId = req.body.tasksId.map((e) => taskId.e);
   User.findOne({ token })
     .then((user) => {
-      User.findByIdAndUpdate(user._id, { tasks: { tasksId } }, { new: true })
+      User.findByIdAndUpdate(user._id, { tasks: tasksId }, { new: true })
         .populate("tasks")
         .then((updatedUser) => {
           if (!updatedUser) {
