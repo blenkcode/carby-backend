@@ -96,7 +96,7 @@ router.get("/tasks/:token", (req, res) => {
   const token = req.params.token;
 
   User.findOne({ token })
-    .populate("tasks")
+    .populate("tasks.taskId")
     .then((user) => {
       if (!user) {
         return res.status(404).json({ result: false, error: "User not found" });
