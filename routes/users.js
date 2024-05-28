@@ -166,11 +166,11 @@ router.put("/xp/:token", (req, res) => {
 // Route PUT pour mettre à jour le compteur d'une tâche spécifique d'un utilisateur
 router.put("/tasks/counter/:token", (req, res) => {
   const token = req.params.token;
-  const { taskId, counter } = req.body;
+  const { _id, counter } = req.body;
 
   User.findOne({ token }).then((user) => {
     const taskIndex = user.tasks.findIndex(
-      (task) => task._id.toString() === taskId
+      (task) => task._id.toString() === _id
     );
     user.tasks[taskIndex].counter = counter;
 
