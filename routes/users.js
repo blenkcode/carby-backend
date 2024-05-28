@@ -163,5 +163,42 @@ router.put("/xp/:token", (req, res) => {
       res.status(500).json({ result: false, error: error.message });
     });
 });
+router.put("/users/tasks/:token", (req, res) => {
+  const { token } = req.params;
+  const { counter } = req.body;
+
+  User.findOne({ token })
+    .then((user) => {
+      if (!user) {
+        console.log("User not found");
+        return res.status(404).json({ result: false, error: "User not found" });
+      }
+
+      const taskIdToUpdate = task._id;
+
+      User.findOneAndUpdate(
+        { "tasks._id": taskIdToUpdate },
+        { $set: { "tasks.$.counter": counter } },
+        { new: true }
+      ).then((updatedUser) => {
+        if (!updatedUser) {
+          return res
+            .status(404)
+            .json({ result: false, error: "User not found after update" });
+        }
+        console.log("Task updated successfully");
+
+        const updatedTask = updatedUser.tasks.id(taskIdToUpdate);
+        res.json({
+          result: true,
+          counter: updatedTask.counter,
+        });
+      });
+    })
+    .catch((error) => {
+      console.error("Error updating tasks:", error);
+      res.status(500).json({ result: false, error: error.message });
+    });
+});
 
 module.exports = router;
