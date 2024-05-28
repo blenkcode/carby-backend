@@ -182,5 +182,28 @@ router.put("/tasks/counter/:token", (req, res) => {
     });
   });
 });
+// route get pour lire la valeur d'un counter associé à une tache / user
 
+router.get("/tasks/counter/:token", (req, res) => {
+  const token = req.params.token;
+  const { _id } = req.body;
+  User.findOne({ token })
+
+    .then((user) => {
+      const taskIndex = user.tasks.findIndex(
+        (task) => task._id.toString() === _id
+      );
+      if (!user) {
+        return res.status(404).json({ result: false, error: "Task not found" });
+      }
+      res.json({
+        result: true,
+        counter: user.tasks[taskIndex].counter,
+      });
+    })
+    .catch((error) => {
+      console.error("Error fetching tasks:", error);
+      res.status(500).json({ result: false, error: error.message });
+    });
+});
 module.exports = router;
