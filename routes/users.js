@@ -184,9 +184,9 @@ router.put("/tasks/counter/:token", (req, res) => {
 });
 // route get pour lire la valeur d'un counter associé à une tache / user
 
-router.get("/tasks/counter/:token", (req, res) => {
+router.get("/tasks/counter/:token/:_id", (req, res) => {
   const token = req.params.token;
-  const { _id } = req.body;
+  const _id = req.params._id;
   User.findOne({ token })
 
     .then((user) => {
@@ -194,7 +194,9 @@ router.get("/tasks/counter/:token", (req, res) => {
         (task) => task._id.toString() === _id
       );
       if (!user) {
-        return res.status(404).json({ result: false, error: "Task not found" });
+        return res
+          .status(404)
+          .json({ result: false, error: "counter not found" });
       }
       res.json({
         result: true,
@@ -202,7 +204,7 @@ router.get("/tasks/counter/:token", (req, res) => {
       });
     })
     .catch((error) => {
-      console.error("Error fetching tasks:", error);
+      console.error("Error fetching counter:", error);
       res.status(500).json({ result: false, error: error.message });
     });
 });
