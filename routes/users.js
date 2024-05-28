@@ -72,7 +72,7 @@ router.put("/initTasks/:token", (req, res) => {
   const tasksId = req.body.tasksId;
   User.findOne({ token })
     .then((user) => {
-      User.findByIdAndUpdate(user._id, { tasks: tasksId }, { new: true })
+      User.findByIdAndUpdate(user._id, { tasks: { tasksId } }, { new: true })
         .populate("tasks")
         .then((updatedUser) => {
           if (!updatedUser) {
