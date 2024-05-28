@@ -172,7 +172,7 @@ router.put("/tasks/counter/:token", (req, res) => {
     const taskIndex = user.tasks.findIndex(
       (task) => task._id.toString() === _id
     );
-    user.tasks[taskIndex].counter = counter;
+    user.tasks[taskIndex].counter += counter;
 
     user.save().then((updatedUser) => {
       res.json({
