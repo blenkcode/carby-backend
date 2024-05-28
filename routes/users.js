@@ -133,7 +133,33 @@ router.put("/lvl/:token", (req, res) => {
       );
     })
     .catch((error) => {
-      console.error("Error updating tasks:", error);
+      console.error("Error updating level:", error);
+      res.status(500).json({ result: false, error: error.message });
+    });
+});
+
+router.put("/xp/:token", (req, res) => {
+  const token = req.params.token;
+  const xpAdd = req.body.xp;
+
+  User.findOne({ token })
+    .then((user) => {
+      User.findByIdAndUpdate(user._id, { xp: xpAdd }, { new: true }).then(
+        (updatedUser) => {
+          if (!updatedUser) {
+            return res
+              .status(404)
+              .json({ result: false, error: "User not found" });
+          }
+          res.json({
+            result: true,
+            xp: updatedUser.xp,
+          });
+        }
+      );
+    })
+    .catch((error) => {
+      console.error("Error updating xp:", error);
       res.status(500).json({ result: false, error: error.message });
     });
 });
