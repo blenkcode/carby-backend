@@ -163,42 +163,24 @@ router.put("/xp/:token", (req, res) => {
       res.status(500).json({ result: false, error: error.message });
     });
 });
-router.put("/users/tasks/:token", (req, res) => {
-  const { token } = req.params;
-  const { counter } = req.body;
+// Route PUT pour mettre à jour le compteur d'une tâche spécifique d'un utilisateur
+router.put("/tasks/counter/:token", (req, res) => {
+  const token = req.params.token;
+  const { taskId, counter } = req.body;
 
-  User.findOne({ token })
-    .then((user) => {
-      if (!user) {
-        console.log("User not found");
-        return res.status(404).json({ result: false, error: "User not found" });
-      }
+  User.findOne({ token }).then((user) => {
+    const taskIndex = user.tasks.findIndex(
+      (task) => task._id.toString() === taskId
+    );
+    user.tasks[taskIndex].counter = counter;
 
-      const taskIdToUpdate = task._id;
-
-      User.findOneAndUpdate(
-        { "tasks._id": taskIdToUpdate },
-        { $set: { "tasks.$.counter": counter } },
-        { new: true }
-      ).then((updatedUser) => {
-        if (!updatedUser) {
-          return res
-            .status(404)
-            .json({ result: false, error: "User not found after update" });
-        }
-        console.log("Task updated successfully");
-
-        const updatedTask = updatedUser.tasks.id(taskIdToUpdate);
-        res.json({
-          result: true,
-          counter: updatedTask.counter,
-        });
+    user.save().then((updatedUser) => {
+      res.json({
+        result: true,
+        tasks: updatedUser.tasks,
       });
-    })
-    .catch((error) => {
-      console.error("Error updating tasks:", error);
-      res.status(500).json({ result: false, error: error.message });
     });
+  });
 });
 
 module.exports = router;
