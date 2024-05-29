@@ -184,28 +184,25 @@ router.put("/tasks/counter/:token", (req, res) => {
 });
 // route get pour lire la valeur d'un counter associé à une tache / user
 
-router.get("/tasks/counter/:token/:_id", (req, res) => {
-  const token = req.params.token;
-  const _id = req.params._id;
-  User.findOne({ token })
+// router.get("/tasks/counter/:token", (req, res) => {
+//   const token = req.params.token;
+//   const _id = req.params._id;
+//   User.findOne({ token })
 
-    .then((user) => {
-      const taskIndex = user.tasks.findIndex(
-        (task) => task._id.toString() === _id
-      );
-      if (!user) {
-        return res
-          .status(404)
-          .json({ result: false, error: "counter not found" });
-      }
-      res.json({
-        result: true,
-        counter: user.tasks[taskIndex].counter,
-      });
-    })
-    .catch((error) => {
-      console.error("Error fetching counter:", error);
-      res.status(500).json({ result: false, error: error.message });
-    });
-});
+//     .then((user) => {
+//       if (!user) {
+//         return res
+//           .status(404)
+//           .json({ result: false, error: "user not found" });
+//       }
+//       res.json({
+//         result: true,
+//         tasks: user.tasks,
+//       });
+//     })
+//     .catch((error) => {
+//       console.error("Error fetching counter:", error);
+//       res.status(500).json({ result: false, error: error.message });
+//     });
+// });
 module.exports = router;

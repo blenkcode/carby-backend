@@ -4,6 +4,7 @@ const badgeSchema = mongoose.Schema({
   title: String,
   img: String,
   xp: Number,
+  maxCounter: Number,
   category: String,
 });
 
