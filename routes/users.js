@@ -39,7 +39,7 @@ router.post("/signup", (req, res) => {
           token: newDoc.token,
           username: newDoc.username,
           xp: newDoc.xp,
-          level: newDoc.level,
+          lvl: newDoc.level,
           _id: newDoc._id,
         });
       });
