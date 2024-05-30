@@ -6,6 +6,8 @@ const bcrypt = require("bcrypt");
 const { checkBody } = require("../modules/checkBody");
 const uid2 = require("uid2");
 
+const { cloudinaryURL } = require("./connection");
+
 /* GET users listing. */
 router.get("/", function (req, res, next) {
   res.send("respond with a resource");
@@ -260,4 +262,22 @@ router.get("/imgProfil/:token", (req, res) => {
       res.status(500).json({ result: false, error: error.message });
     });
 });
+const cloudinary = require("cloudinary").v2;
+const uniqid = require("uniqid");
+const fs = require("fs");
+
+router.post("/upload", async (req, res) => {
+  const photoPath = `./tmp/${uniqid()}.jpg`;
+  const resultMove = await req.files.photoFromFront.mv(photoPath);
+
+  if (!resultMove) {
+    const resultCloudinary = await cloudinary.uploader.upload(photoPath);
+    res.json({ result: true, url: resultCloudinary.secure_url });
+  } else {
+    res.json({ result: false, error: resultMove });
+  }
+
+  fs.unlinkSync(photoPath);
+});
+
 module.exports = router;

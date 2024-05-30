@@ -1,19 +1,19 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
 
-const User = require('../models/users');
-const Tweet = require('../models/tweets');
-const { checkBody } = require('../modules/checkBody');
+const User = require("../models/users");
+const Tweet = require("../models/tweets");
+const { checkBody } = require("../modules/checkBody");
 
-router.post('/', (req, res) => {
-  if (!checkBody(req.body, ['token', 'content'])) {
-    res.json({ result: false, error: 'Missing or empty fields' });
+router.post("/", (req, res) => {
+  if (!checkBody(req.body, ["token", "content"])) {
+    res.json({ result: false, error: "Missing or empty fields" });
     return;
   }
 
-  User.findOne({ token: req.body.token }).then(user => {
+  User.findOne({ token: req.body.token }).then((user) => {
     if (user === null) {
-      res.json({ result: false, error: 'User not found' });
+      res.json({ result: false, error: "User not found" });
       return;
     }
 
@@ -24,32 +24,34 @@ router.post('/', (req, res) => {
       createdAt: new Date(),
     });
 
-    newTweet.save().then(newDoc => {
+    newTweet.save().then((newDoc) => {
       res.json({ result: true, tweet: newDoc });
     });
   });
 });
 
-
-router.get('/all/:token', (req, res) => {
+router.get("/all/:token", (req, res) => {
   User.findOne({ token: req.params.token })
-    .then(user => {
+    .then((user) => {
       if (!user) {
-        return res.json({ result: false, error: 'User not found' });
+        return res.json({ result: false, error: "User not found" });
       }
       Tweet.find()
-        .sort({ createdAt: 'desc' })
-        .then(tweets => {
+        .sort({ createdAt: "desc" })
+        .then((tweets) => {
           res.json({ result: true, tweets });
         })
-        .catch(error => {
-          res.json({ result: false, error: 'Error fetching tweets', details: error });
+        .catch((error) => {
+          res.json({
+            result: false,
+            error: "Error fetching tweets",
+            details: error,
+          });
         });
     })
-    .catch(error => {
-      res.json({ result: false, error: 'Error finding user', details: error });
+    .catch((error) => {
+      res.json({ result: false, error: "Error finding user", details: error });
     });
 });
-
 
 module.exports = router;

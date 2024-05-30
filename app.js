@@ -12,6 +12,8 @@ var badgesRouter = require("./routes/badges");
 var articlesRouter = require("./routes/articles");
 var tweetsRouter = require("./routes/tweets");
 
+const fileUpload = require("express-fileupload");
+app.use(fileUpload());
 var app = express();
 const cors = require("cors");
 app.use(cors());
