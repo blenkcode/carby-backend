@@ -241,4 +241,23 @@ router.put("/imgProfil/:token", (req, res) => {
       res.status(500).json({ result: false, error: error.message });
     });
 });
+
+router.get("/imgProfil/:token", (req, res) => {
+  const token = req.params.token;
+
+  User.findOne({ token })
+    .then((user) => {
+      if (!user) {
+        return res.status(404).json({ result: false, error: "User not found" });
+      }
+      res.json({
+        result: true,
+        imgProfil: user.imgProfil,
+      });
+    })
+    .catch((error) => {
+      console.error("Error fetching tasks:", error);
+      res.status(500).json({ result: false, error: error.message });
+    });
+});
 module.exports = router;
