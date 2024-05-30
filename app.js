@@ -10,6 +10,7 @@ var usersRouter = require("./routes/users");
 var tasksRouter = require("./routes/tasks");
 var badgesRouter = require("./routes/badges");
 var articlesRouter = require("./routes/articles");
+var tweetsRouter = require("./routes/tweets");
 
 var app = express();
 const cors = require("cors");
@@ -26,5 +27,6 @@ app.use("/users", usersRouter);
 app.use("/articles", articlesRouter);
 app.use("/badges", badgesRouter);
 app.use("/tasks", tasksRouter);
+app.use("/tweets", tweetsRouter);
 
 module.exports = app;
