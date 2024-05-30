@@ -211,4 +211,32 @@ router.put("/tasks/counter/:token", (req, res) => {
 //       res.status(500).json({ result: false, error: error.message });
 //     });
 // });
+
+router.put("/imgProfil/:token", (req, res) => {
+  const token = req.params.token;
+  const imgProfil = req.body.imgProfil;
+
+  User.findOne({ token })
+    .then((user) => {
+      User.findByIdAndUpdate(
+        user._id,
+        { imgProfil: imgProfil },
+        { new: true }
+      ).then((updatedUser) => {
+        if (!updatedUser) {
+          return res
+            .status(404)
+            .json({ result: false, error: "User not found" });
+        }
+        res.json({
+          result: true,
+          imgProfil: updatedUser.imgProfil,
+        });
+      });
+    })
+    .catch((error) => {
+      console.error("Error updating imgProfil:", error);
+      res.status(500).json({ result: false, error: error.message });
+    });
+});
 module.exports = router;

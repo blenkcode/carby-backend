@@ -8,6 +8,7 @@ const userSchema = mongoose.Schema({
   avatar: String,
   xp: Number,
   level: Number,
+  imgProfil: String,
   friendlist: [],
   badges: [{ type: mongoose.Schema.Types.ObjectId, ref: "badges" }],
 
