@@ -28,7 +28,6 @@ router.post("/signup", (req, res) => {
         email: req.body.email,
         username: req.body.username,
         password: hash,
-        imgProfil: null,
         xp: 0,
         level: 1,
         token: uid2(32),
@@ -37,11 +36,10 @@ router.post("/signup", (req, res) => {
       newUser.save().then((newDoc) => {
         res.json({
           result: true,
-          imgProfil: newDoc.imgProfil,
           token: newDoc.token,
           username: newDoc.username,
           xp: newDoc.xp,
-          lvl: newDoc.level,
+          level: newDoc.level,
           _id: newDoc._id,
         });
       });
@@ -61,13 +59,7 @@ router.post("/signin", (req, res) => {
   User.findOne({ email: { $regex: new RegExp(req.body.email, "i") } }).then(
     (data) => {
       if (data && bcrypt.compareSync(req.body.password, data.password)) {
-        res.json({
-          result: true,
-          token: data.token,
-          email: data.email,
-          xp: data.xp,
-          lvl: data.level,
-        });
+        res.json({ result: true, token: data.token, email: data.email });
       } else {
         res.json({ result: false, error: "User not found or wrong password" });
       }
@@ -213,52 +205,4 @@ router.put("/tasks/counter/:token", (req, res) => {
 //       res.status(500).json({ result: false, error: error.message });
 //     });
 // });
-
-router.put("/imgProfil/:token", (req, res) => {
-  const token = req.params.token;
-  const imgProfil = req.body.imgProfil;
-
-  User.findOne({ token })
-    .then((user) => {
-      User.findByIdAndUpdate(
-        user._id,
-        { imgProfil: imgProfil },
-        { new: true }
-      ).then((updatedUser) => {
-        if (!updatedUser) {
-          return res
-            .status(404)
-            .json({ result: false, error: "User not found" });
-        }
-        res.json({
-          result: true,
-          imgProfil: updatedUser.imgProfil,
-        });
-      });
-    })
-    .catch((error) => {
-      console.error("Error updating imgProfil:", error);
-      res.status(500).json({ result: false, error: error.message });
-    });
-});
-
-router.get("/imgProfil/:token", (req, res) => {
-  const token = req.params.token;
-
-  User.findOne({ token })
-    .then((user) => {
-      if (!user) {
-        return res.status(404).json({ result: false, error: "User not found" });
-      }
-      res.json({
-        result: true,
-        imgProfil: user.imgProfil,
-      });
-    })
-    .catch((error) => {
-      console.error("Error fetching tasks:", error);
-      res.status(500).json({ result: false, error: error.message });
-    });
-});
-
 module.exports = router;
