@@ -28,6 +28,7 @@ router.post("/signup", (req, res) => {
         email: req.body.email,
         username: req.body.username,
         password: hash,
+        imgProfil: null,
         xp: 0,
         level: 1,
         token: uid2(32),
@@ -36,6 +37,7 @@ router.post("/signup", (req, res) => {
       newUser.save().then((newDoc) => {
         res.json({
           result: true,
+          imgProfil: newDoc.imgProfil,
           token: newDoc.token,
           username: newDoc.username,
           xp: newDoc.xp,
